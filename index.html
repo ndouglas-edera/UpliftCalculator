@@ -1,0 +1,1829 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Edera AI Infrastructure Value Calculator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #012b27;
+      --card: #023833;
+      --card-border: #054f49;
+      --accent: #b2ff44;
+      --accent-hover: #9ee635;
+      --text: #ffffff;
+      --muted: #8fb3af;
+      --border: #0a5e57;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    h1, h2, .logo, .eyebrow, button, .big-number, .metric-number {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .container {
+      width: min(1060px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 32px 0 70px;
+    }
+
+    /* Header - White Toolbar Theme */
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 60px;
+      background: #ffffff; /* Clean white background */
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    /* Inline CSS Logo scaled up */
+    .logo-box {
+      border: 2px solid #012b27;
+      padding: 4px 12px;
+      display: inline-block;
+      transform: scale(1.15);
+      transform-origin: left center;
+      transition: border-color 0.2s ease;
+    }
+
+    .logo-box:hover {
+      border-color: #04423c;
+    }
+
+    .logo-text {
+      color: #012b27;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+    }
+
+    .prototype-label {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    /* Hero */
+
+    .hero {
+      max-width: 800px;
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      font-size: clamp(36px, 5.5vw, 60px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    /* Progress */
+
+    .progress {
+      height: 6px;
+      margin: 35px 0 20px;
+      background: #04423c;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 33.333%;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.35s ease;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 9px;
+      margin-bottom: 28px;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .steps .active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Cards */
+
+    .card {
+      padding: 36px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .question {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .question.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0 0 28px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Form */
+
+    .field {
+      margin: 25px 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #d1e5e2;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #01201d;
+      color: var(--text);
+      font: inherit;
+    }
+
+    select:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .option {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #01201d;
+      color: var(--muted);
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .option:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .option.selected {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #012b27;
+      font-weight: 700;
+    }
+
+    /* Navigation */
+
+    .navigation {
+      display: flex;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 24px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .primary {
+      flex: 1;
+      background: var(--accent);
+      color: #012b27;
+    }
+
+    .primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--muted);
+    }
+
+    /* Results */
+
+    .results {
+      display: none;
+    }
+
+    .results.visible {
+      display: block;
+      animation: fadeIn 0.45s ease;
+    }
+
+    .result-hero {
+      padding: 20px 0 35px;
+      text-align: center;
+    }
+
+    .result-hero h2 {
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .big-number {
+      margin: 12px 0;
+      font-size: clamp(52px, 8vw, 86px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .range {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .roi {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: rgba(178, 255, 68, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #01201d;
+    }
+
+    .metric-number {
+      margin-bottom: 5px;
+      font-size: 31px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .metric-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .metric-description {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    /* Breakdown */
+
+    .breakdown {
+      margin-top: 28px;
+      padding-top: 25px;
+      border-top: 1px solid var(--border);
+    }
+
+    .bar-row {
+      margin: 20px 0;
+    }
+
+    .bar-heading {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .track {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #01201d;
+      border: 1px solid var(--border);
+    }
+
+    .fill {
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      transition: width 1s ease;
+    }
+
+    /* Insight */
+
+    .insight {
+      margin-top: 25px;
+      padding: 22px;
+      border-radius: 14px;
+      background: #01201d;
+      border: 1px solid var(--border);
+      line-height: 1.55;
+    }
+
+    .insight strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--accent);
+    }
+
+    /* CTA */
+
+    .cta {
+      margin-top: 18px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #01201d;
+      text-align: center;
+    }
+
+    .cta p {
+      margin: 7px 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .disclaimer {
+      margin: 22px auto 0;
+      max-width: 750px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+      text-align: center;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        width: min(100% - 28px, 1060px);
+      }
+
+      header {
+        margin-bottom: 40px;
+      }
+
+      .prototype-label {
+        display: none;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <header>
+    <a href="https://edera.dev/" class="logo-container">
+      <div class="logo-box">
+        <span class="logo-text">EDERA</span>
+      </div>
+    </a>
+
+    <div class="prototype-label">
+      AI Infrastructure Value Calculator · Prototype
+    </div>
+  </header>
+
+
+  <section class="hero" id="intro">
+
+    <div class="eyebrow">
+      ARE YOU READY TO CYA?
+    </div>
+
+    <h1>
+      What could better AI execution infrastructure be worth?
+    </h1>
+
+    <p>
+      Answer a few questions about your agents, infrastructure and
+      operational requirements. We'll estimate the engineering capacity,
+      infrastructure efficiency and execution opportunity available to
+      your organisation.
+    </p>
+
+  </section>
+
+
+  <div class="progress" id="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="steps" id="steps">
+
+    <span class="active">01 Workloads</span>
+
+    <span>•</span>
+
+    <span>02 Infrastructure</span>
+
+    <span>•</span>
+
+    <span>03 Requirements</span>
+
+  </div>
+
+
+  <main class="card" id="calculator">
+
+
+    <section class="question active" data-step="1">
+
+      <h2>Your AI workloads</h2>
+
+      <p class="subtitle">
+        Start with the scale and shape of your agent workloads.
+      </p>
+
+
+      <div class="field">
+
+        <label>
+          Number of developers using AI agents
+        </label>
+
+        <select id="developers">
+
+          <option value="10">
+            Fewer than 10
+          </option>
+
+          <option value="50">
+            10 - 50
+          </option>
+
+          <option value="250">
+            50 - 250
+          </option>
+
+          <option value="1000">
+            250 - 1,000
+          </option>
+
+          <option value="2500">
+            1,000+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Agent sandbox workloads per month
+        </label>
+
+        <select id="workloads">
+
+          <option value="1000">
+            Fewer than 1,000
+          </option>
+
+          <option value="10000">
+            1,000 - 10,000
+          </option>
+
+          <option value="100000">
+            10,000 - 100,000
+          </option>
+
+          <option value="500000">
+            100,000 - 1 million
+          </option>
+
+          <option value="1500000">
+            More than 1 million
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Typical environment initialisation time
+        </label>
+
+        <div
+          class="options"
+          data-name="init"
+        >
+
+          <div class="option" data-value="0.5">
+            Under 1 minute
+          </div>
+
+          <div class="option" data-value="3">
+            1 - 5 minutes
+          </div>
+
+          <div class="option" data-value="10">
+            5 - 15 minutes
+          </div>
+
+          <div class="option" data-value="22">
+            15 - 30 minutes
+          </div>
+
+          <div class="option" data-value="40">
+            30+ minutes
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="question" data-step="2">
+
+      <h2>Your infrastructure</h2>
+
+      <p class="subtitle">
+        Tell us what powers your workloads today.
+        Rough estimates are enough.
+      </p>
+
+
+      <div class="field">
+
+        <label>
+          Where do your agents run today?
+        </label>
+
+        <div
+          class="options"
+          data-name="environment"
+        >
+
+          <div class="option" data-value="managed">
+            Cloud provider sandbox
+          </div>
+
+          <div class="option" data-value="external">
+            Managed sandbox provider
+          </div>
+
+          <div class="option" data-value="k8s">
+            Kubernetes
+          </div>
+
+          <div class="option" data-value="vm">
+            VMs / private infrastructure
+          </div>
+
+          <div class="option" data-value="mixed">
+            Multiple environments
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Approximate annual spend on
+          agent / sandbox infrastructure
+        </label>
+
+        <select id="spend">
+
+          <option value="25000">
+            Less than $25K
+          </option>
+
+          <option value="75000">
+            $25K–$100K
+          </option>
+
+          <option value="300000">
+            $100K–$500K
+          </option>
+
+          <option value="750000">
+            $500K–$1M
+          </option>
+
+          <option value="1500000">
+            $1M+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Engineers supporting AI execution infrastructure
+        </label>
+
+        <select id="sre">
+
+          <option value="1">
+            1
+          </option>
+
+          <option value="3">
+            2–4
+          </option>
+
+          <option value="7">
+            5–10
+          </option>
+
+          <option value="15">
+            11–20
+          </option>
+
+          <option value="30">
+            20+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          How much of their time goes toward maintaining it?
+        </label>
+
+        <select id="srePct">
+
+          <option value=".05">
+            Under 5%
+          </option>
+
+          <option value=".075">
+            5–10%
+          </option>
+
+          <option value=".175">
+            10–25%
+          </option>
+
+          <option value=".375">
+            25–50%
+          </option>
+
+          <option value=".6">
+            More than 50%
+          </option>
+
+        </select>
+
+      </div>
+
+    </section>
+
+
+    <section class="question" data-step="3">
+
+      <h2>Your requirements</h2>
+
+      <p class="subtitle">
+        The value of where an agent runs depends heavily
+        on what it can access.
+      </p>
+
+
+      <div class="field">
+
+        <label>
+          What kind of data can your agents access?
+        </label>
+
+        <div
+          class="options"
+          data-name="data"
+        >
+
+          <div class="option" data-value="0">
+            Non-sensitive
+          </div>
+
+          <div class="option" data-value="1">
+            Internal / proprietary
+          </div>
+
+          <div class="option" data-value="2">
+            Customer data
+          </div>
+
+          <div class="option" data-value="3">
+            Regulated data
+          </div>
+
+          <div class="option" data-value="4">
+            A mix of these
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Do you need agent workloads to remain
+          inside infrastructure or network boundaries
+          you control?
+        </label>
+
+        <div
+          class="options"
+          data-name="control"
+        >
+
+          <div class="option" data-value="1">
+            Yes! This is important.
+          </div>
+
+          <div class="option" data-value="0">
+            No, managed infrastructure is fine.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          How often do agents repeat expensive setup work?
+        </label>
+
+        <div
+          class="options"
+          data-name="repeat"
+        >
+
+          <div class="option" data-value=".02">
+            Rarely
+          </div>
+
+          <div class="option" data-value=".08">
+            Sometimes
+          </div>
+
+          <div class="option" data-value=".18">
+            Frequently
+          </div>
+
+          <div class="option" data-value=".30">
+            Constantly
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          How important is exploring multiple agent
+          trajectories from the same state?
+        </label>
+
+        <div
+          class="options"
+          data-name="fork"
+        >
+
+          <div class="option" data-value="0">
+            Not currently important
+          </div>
+
+          <div class="option" data-value=".05">
+            Useful
+          </div>
+
+          <div class="option" data-value=".12">
+            Important
+          </div>
+
+          <div class="option" data-value=".20">
+            Core to our workflow
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="navigation">
+
+      <button
+        class="secondary"
+        id="back"
+        style="display:none"
+      >
+        Back
+      </button>
+
+      <button
+        class="primary"
+        id="next"
+      >
+        Continue
+      </button>
+
+    </div>
+
+  </main>
+
+
+  <section
+    class="results card"
+    id="results"
+  >
+
+    <div class="result-hero">
+
+      <h2>
+        Estimated annual business opportunity
+      </h2>
+
+      <div
+        class="big-number"
+        id="total"
+      >
+        $0
+      </div>
+
+      <div
+        class="range"
+        id="range"
+      >
+        Directional estimate based on your inputs
+      </div>
+
+      <div
+        class="roi"
+        id="roi"
+      >
+        Potential ROI: 0×
+      </div>
+
+    </div>
+
+
+    <div class="metrics">
+
+      <div class="metric">
+
+        <div
+          class="metric-number"
+          id="hours"
+        >
+          0
+        </div>
+
+        <div class="metric-title">
+          Engineering capacity
+        </div>
+
+        <p class="metric-description">
+          Hours potentially recovered from infrastructure
+          operations and repeated environment setup.
+        </p>
+
+      </div>
+
+
+      <div class="metric">
+
+        <div
+          class="metric-number"
+          id="infra"
+        >
+          $0
+        </div>
+
+        <div class="metric-title">
+          Infrastructure opportunity
+        </div>
+
+        <p class="metric-description">
+          Potential efficiency opportunity from more
+          reusable, stateful execution environments.
+        </p>
+
+      </div>
+
+
+      <div class="metric">
+
+        <div
+          class="metric-number"
+          id="throughput"
+        >
+          0×
+        </div>
+
+        <div class="metric-title">
+          Agent throughput
+        </div>
+
+        <p class="metric-description">
+          Illustrative potential improvement from reducing
+          repeated initialisation and reusing state.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="breakdown">
+
+      <h2>
+        Where the opportunity comes from
+      </h2>
+
+
+      <div class="bar-row">
+
+        <div class="bar-heading">
+
+          <span>
+            Engineering capacity
+          </span>
+
+          <span id="bar1Value">
+            $0
+          </span>
+
+        </div>
+
+        <div class="track">
+          <div
+            class="fill"
+            id="bar1"
+          ></div>
+        </div>
+
+      </div>
+
+
+      <div class="bar-row">
+
+        <div class="bar-heading">
+
+          <span>
+            Infrastructure efficiency
+          </span>
+
+          <span id="bar2Value">
+            $0
+          </span>
+
+        </div>
+
+        <div class="track">
+          <div
+            class="fill"
+            id="bar2"
+          ></div>
+        </div>
+
+      </div>
+
+
+      <div class="bar-row">
+
+        <div class="bar-heading">
+
+          <span>
+            Execution efficiency
+          </span>
+
+          <span id="bar3Value">
+            $0
+          </span>
+
+        </div>
+
+        <div class="track">
+          <div
+            class="fill"
+            id="bar3"
+          ></div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="insight">
+
+      <strong id="insightTitle">
+        Your biggest opportunity
+      </strong>
+
+      <span id="insightText"></span>
+
+    </div>
+
+
+    <div class="cta">
+
+      <h2>
+        See what this could look like on your infrastructure
+      </h2>
+
+      <p>
+        Turn this directional estimate into a
+        workload-specific assessment with the Edera team.
+      </p>
+
+      <button
+        class="primary"
+        onclick="requestAssessment()"
+      >
+        Request a personalised assessment
+      </button>
+
+    </div>
+
+
+    <div style="text-align:center;margin-top:18px">
+
+      <button
+        class="secondary"
+        onclick="restart()"
+      >
+        Start over
+      </button>
+
+    </div>
+
+
+    <p class="disclaimer">
+
+      Prototype only. Estimates are intentionally directional
+      and use illustrative assumptions, not Edera pricing or
+      guaranteed customer outcomes. Replace the calculation
+      model with validated Edera benchmarks before publication.
+
+    </p>
+
+  </section>
+
+</div>
+
+
+<script>
+
+/*
+|--------------------------------------------------------------------------
+| STATE
+|--------------------------------------------------------------------------
+*/
+
+const state = {
+  step: 1,
+
+  init: null,
+  environment: null,
+  data: null,
+  control: null,
+  repeat: null,
+  fork: null
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| HELPERS
+|--------------------------------------------------------------------------
+*/
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+
+function money(value) {
+
+  return "$" + Math.round(value)
+    .toLocaleString("en-US");
+
+}
+
+
+function compactMoney(value) {
+
+  if (value >= 1000000) {
+
+    return "$" +
+      (value / 1000000).toFixed(1) +
+      "M";
+
+  }
+
+  if (value >= 1000) {
+
+    return "$" +
+      Math.round(value / 1000) +
+      "K";
+
+  }
+
+  return money(value);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| OPTION SELECTION
+|--------------------------------------------------------------------------
+*/
+
+document
+  .querySelectorAll(".options")
+  .forEach(group => {
+
+    group
+      .querySelectorAll(".option")
+      .forEach(option => {
+
+        option.addEventListener("click", () => {
+
+          group
+            .querySelectorAll(".option")
+            .forEach(item => {
+
+              item.classList.remove("selected");
+
+            });
+
+
+          option.classList.add("selected");
+
+
+          const name =
+            group.dataset.name;
+
+          state[name] =
+            option.dataset.value;
+
+        });
+
+      });
+
+  });
+
+
+/*
+|--------------------------------------------------------------------------
+| STEP NAVIGATION
+|--------------------------------------------------------------------------
+*/
+
+function renderStep() {
+
+  document
+    .querySelectorAll(".question")
+    .forEach(question => {
+
+      question.classList.toggle(
+        "active",
+        Number(question.dataset.step) === state.step
+      );
+
+    });
+
+
+  $("back").style.display =
+    state.step > 1
+      ? "block"
+      : "none";
+
+
+  $("next").textContent =
+    state.step === 3
+      ? "Calculate my opportunity"
+      : "Continue";
+
+
+  $("progressBar").style.width =
+    (state.step / 3 * 100) + "%";
+
+
+  document
+    .querySelectorAll(".steps > span")
+    .forEach((item, index) => {
+
+      /*
+       * The actual step labels occur at indexes
+       * 0, 2 and 4 because the bullets are spans too.
+       */
+
+      const stepIndex =
+        Math.floor(index / 2);
+
+      item.classList.toggle(
+        "active",
+        index % 2 === 0 &&
+        stepIndex === state.step - 1
+      );
+
+    });
+
+}
+
+
+$("next").addEventListener("click", () => {
+
+  if (state.step < 3) {
+
+    state.step++;
+
+    renderStep();
+
+  } else {
+
+    calculate();
+
+  }
+
+});
+
+
+$("back").addEventListener("click", () => {
+
+  state.step--;
+
+  renderStep();
+
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| CALCULATION MODEL
+|--------------------------------------------------------------------------
+*/
+
+const ASSUMPTIONS = {
+
+  engineerCost: 165000,
+  workingHours: 2080,
+  maxInfrastructureEfficiency: 0.28,
+  maxExecutionEfficiency: 0.22
+
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| MAIN CALCULATION
+|--------------------------------------------------------------------------
+*/
+
+function calculate() {
+
+  const developers =
+    Number($("developers").value);
+
+
+  const workloads =
+    Number($("workloads").value);
+
+
+  const initMinutes =
+    Number(state.init || 5);
+
+
+  const infrastructureSpend =
+    Number($("spend").value);
+
+
+  const sreEngineers =
+    Number($("sre").value);
+
+
+  const srePercentage =
+    Number($("srePct").value);
+
+
+  const dataSensitivity =
+    Number(state.data || 0);
+
+
+  const infrastructureControl =
+    Number(state.control || 0);
+
+
+  const repeatedSetup =
+    Number(state.repeat || 0.08);
+
+
+  const forking =
+    Number(state.fork || 0);
+
+
+  /*
+   * ENGINEERING CAPACITY
+   */
+
+  const infrastructureHours =
+    sreEngineers *
+    srePercentage *
+    ASSUMPTIONS.workingHours;
+
+
+  const recoverableOpsHours =
+    infrastructureHours *
+    (
+      0.22 +
+      dataSensitivity * 0.025 +
+      infrastructureControl * 0.05
+    );
+
+
+  const repeatedSetupHours =
+    workloads *
+    12 *
+    (initMinutes / 60) *
+    repeatedSetup;
+
+
+  const engineeringHours =
+    Math.max(
+      0,
+      Math.round(
+        recoverableOpsHours +
+        repeatedSetupHours
+      )
+    );
+
+
+  const engineeringValue =
+    engineeringHours *
+    (
+      ASSUMPTIONS.engineerCost /
+      ASSUMPTIONS.workingHours
+    );
+
+
+  /*
+   * INFRASTRUCTURE EFFICIENCY
+   */
+
+  const infrastructureEfficiency =
+    Math.min(
+      infrastructureSpend *
+      ASSUMPTIONS.maxInfrastructureEfficiency,
+
+      infrastructureSpend *
+      (
+        0.08 +
+        repeatedSetup * 0.5 +
+        forking * 0.25
+      )
+    );
+
+
+  /*
+   * EXECUTION EFFICIENCY
+   */
+
+  const executionEfficiency =
+    Math.min(
+
+      infrastructureSpend *
+      ASSUMPTIONS.maxExecutionEfficiency,
+
+      workloads *
+      (initMinutes / 60) *
+      repeatedSetup *
+      0.12 *
+      35
+
+    );
+
+
+  /*
+   * DATA / CONTROL OPPORTUNITY
+   */
+
+  const securitySignal =
+    dataSensitivity >= 2
+      ? 0.06
+      : dataSensitivity === 1
+        ? 0.03
+        : 0.01;
+
+
+  const controlOpportunity =
+    infrastructureControl
+      ? infrastructureSpend *
+        (0.04 + securitySignal)
+      : infrastructureSpend *
+        securitySignal;
+
+
+  /*
+   * TOTAL
+   */
+
+  const totalOpportunity =
+    engineeringValue +
+    infrastructureEfficiency +
+    executionEfficiency +
+    controlOpportunity;
+
+
+  const assumedEderaCost =
+    infrastructureSpend * 0.25;
+
+
+  const roi =
+    totalOpportunity /
+    Math.max(1, assumedEderaCost);
+
+
+  /*
+   * THROUGHPUT
+   */
+
+  const throughput =
+    1 +
+    Math.min(
+      0.95,
+
+      repeatedSetup * 0.9 +
+      forking * 0.7 +
+      (initMinutes >= 10 ? 0.12 : 0.04)
+    );
+
+
+  /*
+   * RENDER RESULTS
+   */
+
+  $("total").textContent =
+    compactMoney(totalOpportunity);
+
+
+  $("range").textContent =
+    "Illustrative range: " +
+    compactMoney(totalOpportunity * 0.75) +
+    "–" +
+    compactMoney(totalOpportunity * 1.25);
+
+
+  $("roi").textContent =
+    "Potential value / estimated adoption cost: " +
+    roi.toFixed(1) +
+    "×";
+
+
+  $("hours").textContent =
+    engineeringHours.toLocaleString("en-US");
+
+
+  $("infra").textContent =
+    compactMoney(
+      infrastructureEfficiency +
+      executionEfficiency
+    );
+
+
+  $("throughput").textContent =
+    throughput.toFixed(1) + "×";
+
+
+  /*
+   * BREAKDOWN
+   */
+
+  const breakdown = [
+
+    engineeringValue,
+
+    infrastructureEfficiency,
+
+    executionEfficiency +
+      controlOpportunity
+
+  ];
+
+
+  const maximum =
+    Math.max(...breakdown);
+
+
+  $("bar1").style.width =
+    (breakdown[0] / maximum * 100) + "%";
+
+
+  $("bar2").style.width =
+    (breakdown[1] / maximum * 100) + "%";
+
+
+  $("bar3").style.width =
+    (breakdown[2] / maximum * 100) + "%";
+
+
+  $("bar1Value").textContent =
+    compactMoney(breakdown[0]);
+
+
+  $("bar2Value").textContent =
+    compactMoney(breakdown[1]);
+
+
+  $("bar3Value").textContent =
+    compactMoney(breakdown[2]);
+
+
+  /*
+   * PERSONALISED INSIGHT
+   */
+
+  if (
+    infrastructureControl &&
+    dataSensitivity >= 2
+  ) {
+
+    $("insightTitle").textContent =
+      "Your biggest opportunity: controlled execution";
+
+
+    $("insightText").textContent =
+      "Your answers suggest that keeping agent execution " +
+      "close to sensitive data and inside infrastructure you " +
+      "control is a significant architectural requirement. " +
+      "A self-hosted sandbox layer can preserve that control " +
+      "while providing a simpler developer experience.";
+
+  }
+
+  else if (repeatedSetup >= 0.18) {
+
+    $("insightTitle").textContent =
+      "Your biggest opportunity: eliminate repeated setup";
+
+
+    $("insightText").textContent =
+      "Your agents appear to spend significant time rebuilding " +
+      "environments. Persistent snapshots and copy-on-write " +
+      "branching can let multiple trajectories start from the " +
+      "same initialised state instead of repeating expensive setup.";
+
+  }
+
+  else if (forking >= 0.12) {
+
+    $("insightTitle").textContent =
+      "Your biggest opportunity: branch computation";
+
+
+    $("insightText").textContent =
+      "Your workflow has a strong need to explore multiple " +
+      "trajectories. Stateful snapshots and forking can turn " +
+      "one expensive initialisation into a reusable starting " +
+      "point for parallel agent execution.";
+
+  }
+
+  else {
+
+    $("insightTitle").textContent =
+      "Your biggest opportunity: simplify execution";
+
+
+    $("insightText").textContent =
+      "Your current environment suggests there may be meaningful " +
+      "value in consolidating agent isolation, lifecycle and " +
+      "state management into a programmable execution layer " +
+      "that can run alongside your existing infrastructure.";
+
+  }
+
+
+  /*
+   * SWITCH UI
+   */
+
+  $("calculator").style.display =
+    "none";
+
+
+  $("intro").style.display =
+    "none";
+
+
+  $("progress").style.display =
+    "none";
+
+
+  $("steps").style.display =
+    "none";
+
+
+  $("results").classList.add(
+    "visible"
+  );
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CTA & RESTART HANDLERS
+|--------------------------------------------------------------------------
+*/
+
+function requestAssessment() {
+  window.open("https://edera.dev/", "_blank");
+}
+
+function restart() {
+  state.step = 1;
+  state.init = null;
+  state.environment = null;
+  state.data = null;
+  state.control = null;
+  state.repeat = null;
+  state.fork = null;
+
+  document.querySelectorAll(".option").forEach(opt => opt.classList.remove("selected"));
+  
+  $("results").classList.remove("visible");
+  $("calculator").style.display = "block";
+  $("intro").style.display = "block";
+  $("progress").style.display = "block";
+  $("steps").style.display = "flex";
+
+  renderStep();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+</script>
+</body>
+</html>
