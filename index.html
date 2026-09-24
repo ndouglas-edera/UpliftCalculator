@@ -275,7 +275,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="field">
         <label>What is the highest sensitivity of data agents may access?</label>
         <div class="options" data-name="data">
-          <button type="button" class="option" data-value="0">Public / non-sensitive</button>
+          <button type="button" class="option selected" data-value="0">Public / non-sensitive</button>
           <button type="button" class="option" data-value="1">Internal</button>
           <button type="button" class="option" data-value="2">Confidential</button>
           <button type="button" class="option" data-value="3">Highly sensitive / regulated</button>
@@ -285,7 +285,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="field">
         <label>Do workloads need to remain inside infrastructure / network boundaries you control?</label>
         <div class="options" data-name="control">
-          <button type="button" class="option" data-value="0">No</button>
+          <button type="button" class="option selected" data-value="0">No</button>
           <button type="button" class="option" data-value="1">Yes</button>
         </div>
       </div>
@@ -293,9 +293,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="field">
         <label>How often do you fork, branch or run parallel agent trajectories?</label>
         <div class="options" data-name="fork">
-          <button type="button" class="option" data-value="0">Rarely</button>
+          <button type="button" class="option selected" data-value="0">Rarely</button>
           <button type="button" class="option" data-value="0.25">Occasionally</button>
-          <button type="button" class="option" data-value="0.5" >Frequently</button>
+          <button type="button" class="option" data-value="0.5">Frequently</button>
           <button type="button" class="option" data-value="0.75">Very frequently</button>
         </div>
       </div>
@@ -426,7 +426,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h3>Isolation / control</h3>
     <p>The model considers data sensitivity, infrastructure control requirements and current isolation spend. It does not assign a made-up security incident rate; incident economics are planned for a future revision.</p>
 <h3>Scenarios</h3>
-    <p>Conservative = 65% of expected benefit; Expected = 100%; Aggressive = 130%. These scenarios represent uncertainty around the modeled opportunity, not a guaranteed financial outcome. Edera licensing or pricing is not included.</p>
+    <p>Conservative = 65% of expected benefit; Expected = 100%; Aggressive = 130%. These scenarios represent uncertainty around the modeled opportunity, not a guaranteed financial outcome.</p>
   </div>
 </div>
 
@@ -451,7 +451,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 ============================================================ */
 const CONFIG = {
   calculatorVersion: "2026-09-revision-1",
-  ederaPublicNodePriceMonthly: 167,
   hubspot: {
     portalId: "",     // e.g. "12345678"
     formId: "",       // e.g. "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -518,7 +517,6 @@ function validateStep(){
   if(state.step===2 && !state.isolation) return err("Please select your current isolation or sandboxing approach.");
   if(state.step===2 && getFormValue("nodes")<1) return err("Please enter the number of agent nodes.");
   if(state.step===3 && getFormValue("engineers")<0) return err("Please enter a valid engineering team size.");
-  if(state.step===4 && state.data==="") return err("Please select the highest data sensitivity.");
   return true;
 }
 
@@ -634,6 +632,9 @@ function restart(){
   state.step=1;state.useCases=[];state.growth=.5;state.isolation="";state.data=0;state.control=0;state.fork=0;state.repeat=.5;state.calculation=null;
   document.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));
   document.querySelector('[data-name="growth"] .option[data-value="0.5"]')?.classList.add("selected");
+  document.querySelector('[data-name="data"] .option[data-value="0"]')?.classList.add("selected");
+  document.querySelector('[data-name="control"] .option[data-value="0"]')?.classList.add("selected");
+  document.querySelector('[data-name="fork"] .option[data-value="0"]')?.classList.add("selected");
   document.querySelector('[data-name="repeat"] .option[data-value="0.5"]')?.classList.add("selected");
   $("calculator").style.display="block";$("intro").style.display="block";$("progress").style.display="block";$("results").classList.remove("visible");renderStep();
   window.scrollTo({top:0,behavior:"smooth"});
