@@ -1,6 +1,4 @@
 ## ROI Calculator
 
-Preview:
-```
+**Preview:** <br/>
 https://ndouglas-edera.github.io/UpliftCalculator
-```
